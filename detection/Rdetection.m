@@ -6,7 +6,7 @@ lenwtsig1=length(wtsig1);
 wtsig1(1:20)=0; 
 wtsig1(lenwtsig1-20:lenwtsig1)=0;
 y=wtsig1;
-%yabs=abs(y);        %select absolute value(for slope threshold)
+yabs=abs(y);        %select absolute value(for slope threshold)
 
 %find the zeros of first-order derivative of the wavelet coeffients
 sigtemp=y;
