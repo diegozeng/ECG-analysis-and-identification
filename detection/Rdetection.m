@@ -9,7 +9,7 @@ wtsig1(lenwtsig1-20:lenwtsig1)=0;
 y=wtsig1;
 yabs=abs(y);        %select absolute value(for slope threshold)
 
-%find the zeros of first-order derivative of the wavelet coeffients
+% Find the zeros of first-order derivative of the wavelet coeffients
 sigtemp=y;
 siglen=length(y);
 sigmax=[];
@@ -18,12 +18,13 @@ for i=1:siglen-2
         sigmax=[sigmax;abs(sigtemp(i+1)),i+1];
     end;
 end;
-%plot original signal and 
+
+% Plot original signal and 
 figure(1);
 subplot(2,1,1),plot(sig);
 subplot(2,1,2),plot(wtsig1);
 
-%R-peak amplitude threshold control (50% of the differential value of the sequence)
+% R-peak amplitude threshold control (50% of the differential value of the sequence)
 thrtemp=sort(sigmax);
 thrlen=length(sigmax);
 thr=0;
@@ -32,17 +33,17 @@ for i=(thrlen-7):thrlen
 end;
 thrmax=thr/8;         
 
-%Upper threshold: determined by Top 8 maximum value
+% Upper threshold: determined by Top 8 maximum value
 zerotemp=sort(y);
 zerovalue=0;
 for i=1:100
     zerovalue=zerovalue+zerotemp(i);
 end;
-zerovalue=zerovalue/100;    %?????????????100?????????
-thr=(thrmax-zerovalue)*0.25; %< constant threshold                     
-%Upper threshold: determined by Lowest 100 of minimum value
+zerovalue=zerovalue/100;    % take the average of 100 smallest value 
+thr=(thrmax-zerovalue)*0.25; % constant threshold                     
+% Upper threshold: determined by Lowest 100 of minimum value
 
-%R value refresh
+% R value refresh
 rvalue=[];
 for i=1:thrlen
     if sigmax(i,1)>thr
@@ -52,10 +53,10 @@ end;
 rvalue_1=rvalue;
 leng2 = length(rvalue); 
 
-%Negative value filter
+% Negative value filter 
 for j=1:1:leng2
-    if y(rvalue(j))<0
-       rvalue(j)=0;
+    if y(rvalue(j))<0 
+       rvalue(j)=0;   %It can be easier by using "rvalue=[]"
     end
 end
 rvalue=sort(rvalue);
@@ -65,7 +66,7 @@ rvalue=rvalue([Len+1:leng]);
 leng1=length(rvalue);
 rvalue_2=rvalue; 
 
-%R-peak frequency threshold control
+% R-peak frequency threshold control
 lenvalue=length(rvalue);
 i=2;
 while i<=lenvalue
@@ -82,8 +83,9 @@ while i<=lenvalue
       i=i+1;
 end;        
 lenvalue=length(rvalue);
+rvalue_3=rvalue; 
 
-%Redirection of the time point when R-peak appears.(Make the resluts more accurate)
+% Redirection of the time point when R-peak appears.(Make the resluts more accurate)
 for i=1:lenvalue
     if (wtsig1(rvalue(i))>0)
         k=(rvalue(i)-3):(rvalue(i)+3);
@@ -96,8 +98,8 @@ for i=1:lenvalue
     end;
 end;
 
-%R-peak amplitude control (option)
-%lenvalue=length(rvalue);
+% R-peak amplitude control (option)
+% lenvalue=length(rvalue);
 % i=2;
 % while i<=lenvalue
 %     if (yabs(rvalue(i))>1.667*yabs(rvalue(i-1)) | yabs(rvalue(i))<0.333*yabs(rvalue(i-1)))
@@ -109,11 +111,13 @@ end;
 % end
 % lenvalue=length(rvalue);
 
-%Output the approximate heart rate (per minute). 
+% Output the approximate heart rate (per minute). 
 Heart_rate = 60*(rate*(lenvalue-1))/(max(rvalue)-min(rvalue))
 
-%plot result in the sub 2 figure, sub 1 figure is used to test.
+% Plot result in the sub 2 figure, sub 1 figure is used to test.
 figure(2);
+% Just for showing every filter's result with "+".
 subplot(2,1,1),plot(1:lensig,wtsig1,rvalue_2,wtsig1(rvalue_2),'r+');
+% Final Rdetection result represents on orginal data sequence with "+".
 subplot(2,1,2),plot(1:lensig,sig,rvalue,sig(rvalue),'r+');
 toc;
