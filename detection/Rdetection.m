@@ -1,13 +1,13 @@
 tic;
 rate=360; % set sampling rate, usually is the integer integer multiple of power-line frequency, since the test data is from MIT, so 360/60=6, satisfied.
-sig=sig100; %Load channel 1 data sequence from the ".dat" file  
+sig=sig109; % Load channel 1 data sequence from the ".dat" file  
 lensig=length(sig);
 wtsig1=cwt(sig,6,'mexh'); %Utilize mexico hat wavelet to decompose the signal
 lenwtsig1=length(wtsig1);
-wtsig1(1:20)=0; 
-wtsig1(lenwtsig1-20:lenwtsig1)=0;
+% wtsig1(1:20)=0; % Optimize algoritm of redirection, so no need to clear
+% wtsig1(lenwtsig1-20:lenwtsig1)=0;
 y=wtsig1;
-yabs=abs(y);        %select absolute value(for slope threshold)
+yabs=abs(y);        % Select absolute value(for slope threshold)
 
 % Find the zeros of first-order derivative of the wavelet coeffients
 sigtemp=y;
@@ -86,17 +86,31 @@ lenvalue=length(rvalue);
 rvalue_3=rvalue; 
 
 % Redirection of the time point when R-peak appears.(Make the results more accurate)
-for i=1:lenvalue
-    if (wtsig1(rvalue(i))>0)
-        k=(rvalue(i)-3):(rvalue(i)+3);
-        [a,b]=max(sig(k));
-        rvalue(i)=rvalue(i)-4+b; 
-    else
-        k=(rvalue(i)-3):(rvalue(i)+3);
-        [a,b]=min(sig(k));
-        rvalue(i)=rvalue(i)-4+b; 
+if max(rvalue)<29995 % Escape exceed matrix length error.
+    for i=1:lenvalue
+        if (wtsig1(rvalue(i))>0)
+            k=(rvalue(i)-4):(rvalue(i)+4);
+            [a,b]=max(sig(k));
+            rvalue(i)=rvalue(i)-5+b; 
+        else
+            k=(rvalue(i)-4):(rvalue(i)+4);
+            [a,b]=min(sig(k));
+            rvalue(i)=rvalue(i)-5+b; 
+        end;
     end;
-end;
+else
+    for i=1:lenvalue-1
+        if (wtsig1(rvalue(i))>0)
+            k=(rvalue(i)-4):(rvalue(i)+4);
+            [a,b]=max(sig(k));
+            rvalue(i)=rvalue(i)-5+b; 
+        else
+            k=(rvalue(i)-4):(rvalue(i)+4);
+            [a,b]=min(sig(k));
+            rvalue(i)=rvalue(i)-5+b; 
+        end;
+    end;
+end
 
 % R-peak amplitude control (option)
 % lenvalue=length(rvalue);
