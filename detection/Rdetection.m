@@ -19,7 +19,7 @@ for i=1:siglen-2
     end;
 end;
 
-% Plot original signal and 
+% Plot original signal and wavelet coef. of original signal (six-decomposation with Mexico Hat wavelet).
 figure(1);
 subplot(2,1,1),plot(sig);
 subplot(2,1,2),plot(wtsig1);
@@ -85,7 +85,7 @@ end;
 lenvalue=length(rvalue);
 rvalue_3=rvalue; 
 
-% Redirection of the time point when R-peak appears.(Make the resluts more accurate)
+% Redirection of the time point when R-peak appears.(Make the results more accurate)
 for i=1:lenvalue
     if (wtsig1(rvalue(i))>0)
         k=(rvalue(i)-3):(rvalue(i)+3);
