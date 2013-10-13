@@ -1,5 +1,6 @@
+tic;
 rate=360; % set sampling rate, usually is the integer integer multiple of power-line frequency, since the test data is from MIT, so 360/60=6, satisfied.
-sig=M_1; %Load channel 1 data sequence from the ".dat" file  
+sig=sig100; %Load channel 1 data sequence from the ".dat" file  
 lensig=length(sig);
 wtsig1=cwt(sig,6,'mexh'); %Utilize mexico hat wavelet to decompose the signal
 lenwtsig1=length(wtsig1);
@@ -21,7 +22,6 @@ end;
 figure(1);
 subplot(2,1,1),plot(sig);
 subplot(2,1,2),plot(wtsig1);
-
 
 %R-peak amplitude threshold control (50% of the differential value of the sequence)
 thrtemp=sort(sigmax);
@@ -76,8 +76,8 @@ while i<=lenvalue
               rvalue(i)=[];
           end;
 
-          lenvalue=length(rvalue);
-          i=i-1;
+       lenvalue=length(rvalue);
+       i=i-1;
       end;
       i=i+1;
 end;        
@@ -86,15 +86,28 @@ lenvalue=length(rvalue);
 %Redirection of the time point when R-peak appears.(Make the resluts more accurate)
 for i=1:lenvalue
     if (wtsig1(rvalue(i))>0)
-        k=(rvalue(i)-5):(rvalue(i)+5);
+        k=(rvalue(i)-3):(rvalue(i)+3);
         [a,b]=max(sig(k));
-        rvalue(i)=rvalue(i)-6+b; 
+        rvalue(i)=rvalue(i)-4+b; 
     else
-        k=(rvalue(i)-5):(rvalue(i)+5);
+        k=(rvalue(i)-3):(rvalue(i)+3);
         [a,b]=min(sig(k));
-        rvalue(i)=rvalue(i)-6+b; 
+        rvalue(i)=rvalue(i)-4+b; 
     end;
 end;
+
+%R-peak amplitude control (option)
+%lenvalue=length(rvalue);
+% i=2;
+% while i<=lenvalue
+%     if (yabs(rvalue(i))>1.667*yabs(rvalue(i-1)) | yabs(rvalue(i))<0.333*yabs(rvalue(i-1)))
+%         rvalue(i)=[];
+%         lenvalue=length(rvalue);
+%         i=i-1;
+%     end
+% i=i+1;
+% end
+% lenvalue=length(rvalue);
 
 %Output the approximate heart rate (per minute). 
 Heart_rate = 60*(rate*(lenvalue-1))/(max(rvalue)-min(rvalue))
@@ -103,3 +116,4 @@ Heart_rate = 60*(rate*(lenvalue-1))/(max(rvalue)-min(rvalue))
 figure(2);
 subplot(2,1,1),plot(1:lensig,wtsig1,rvalue_2,wtsig1(rvalue_2),'r+');
 subplot(2,1,2),plot(1:lensig,sig,rvalue,sig(rvalue),'r+');
+toc;
