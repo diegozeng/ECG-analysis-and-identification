@@ -132,6 +132,9 @@ Heart_rate = 60*(rate*(lenvalue - 1))/(max(rvalue) - min(rvalue))
 figure(2);
 % Just for showing every filter's result with "+".
 subplot(2,1,1),plot(1:lensig,wtsig1,rvalue_2,wtsig1(rvalue_2),'r+');
+hold on
+% Plot the threshold line.
+plot(1:lensig,thr);
 % Final Rdetection result represents on orginal data sequence with "+".
 subplot(2,1,2),plot(1:lensig,sig,rvalue,sig(rvalue),'r+');
 toc;
