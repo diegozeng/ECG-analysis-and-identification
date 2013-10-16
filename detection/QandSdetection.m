@@ -1,9 +1,9 @@
 % Q detection
-wtsig2 = cwt(sig,8,'mexh');
+wtsig2 = cwt(sig,8,'mexh'); % order-8 Mexico Hat wavelet 
 lenrvalue = length(rvalue);
 qvalue = [];
 for i = 1:lenrvalue
-    for j = rvalue(i):-1:(rvalue(i) - 30)
+    for j = rvalue(i):-1:(rvalue(i) - 30) %find Q, so search left area
         if wtsig1(rvalue(i)) > 0 
             if wtsig2(j) < wtsig2(j - 1) & wtsig2(j) < wtsig2(j + 1)
                 tempqvalue = j - 10;                 
@@ -11,13 +11,14 @@ for i = 1:lenrvalue
             end;
 
         else
-             if wtsig2(j) > wtsig2(j - 1)&wtsig2(j) > wtsig2(j + 1)
+             if wtsig2(j) > wtsig2(j - 1) & wtsig2(j) > wtsig2(j + 1)
                 tempqvalue = j - 10;                
             break;                      
             end;
         end;
     end;
-    x1 = tempqvalue;
+    % Slope method to find Q 
+    x1 = tempqvalue; 
     y1 = sig(tempqvalue);
     x2 = rvalue(i);
     y2 = sig(rvalue(i));
@@ -40,7 +41,7 @@ end;
 % S detection 
 svalue = [];
 for i = 1:lenrvalue - 1
-    for j = rvalue(i):1:(rvalue(i) + 100)
+    for j = rvalue(i):1:(rvalue(i) + 100) %find Q, so search left area
         if wtsig1(rvalue(i)) > 0
            if (wtsig2(j) < wtsig2(j - 1))&(wtsig2(j) < wtsig2(j + 1))
                tempsvalue = j + 10;      
@@ -52,8 +53,9 @@ for i = 1:lenrvalue - 1
                tempsvalue = j + 10;     
                break;
            end;
-end;
     end;
+end;
+    % Slope method to find Q 
     x1 = tempsvalue;
     y1 = sig(tempsvalue);
     x2 = rvalue(i);
