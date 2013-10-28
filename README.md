@@ -17,7 +17,9 @@ Requirements:
 2. The feature points (P, QRS, T waves) of the ECGs should be identified automatically by yoursoftware program
 
 3. The beat rate & R‐R interval of the ECGs should be calculated automatically by the software
-================================
+
+Schedule:
+==============================
 Already realize R-detection with varying thershold if we treat the total samples as the window length
 
 not fixed thershold and on line thershold
